@@ -94,7 +94,7 @@ h1, h2 {
     flex-basis: 66.66%;
     flex-grow: 1;
     margin-top: 0.5vh;
-    padding-top: 16vh;
+    /* Removed padding-top: 16vh; to move it to the first-child selector below */
     padding-left: 20px;
     box-sizing: border-box;
     position: relative;
@@ -104,18 +104,34 @@ h1, h2 {
     margin: 0 0 8px 0;
 }
 
+/* Fix for consistent top alignment on loaded content */
+.right-column-wrapper > *:first-child {
+    padding-top: 16vh; /* Applies the header spacing to the loaded content */
+}
+
 /* Base styles for content loaded into the right column */
 .content-section p, 
 .right-column-wrapper p {
     color: #ddd;
     line-height: 1.5;
     margin-bottom: 16px;
-    /* KEY CHANGE: Preserve spacing and line breaks */
     white-space: pre-wrap; 
 }
 
 .content-section {
     padding: 32px 0;
+}
+
+/* HOME PAGE IMAGE STYLES */
+.home-image-container {
+    width: 100%;
+}
+
+.home-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
 /* TIMELINE (Must be here since content is dynamic) */
@@ -248,6 +264,10 @@ h1, h2 {
         padding-left: 0;
         padding-top: 0;
     }
+    /* Mobile fix for content alignment */
+    .right-column-wrapper > *:first-child {
+        padding-top: 0 !important; 
+    }
 }
 
 @media (max-width: 600px) {
@@ -270,16 +290,16 @@ h1, h2 {
         <div class="left-content">
             <h1>Paul Arthur</h1>
             <br>
-            <h2>Recording Artist</h2>
+            <h2>Creative Technologist</h2>
 
             <div class="description-text">
-                Melodic storyteller for moods
+                Audio / Visual Artist and Storyteller
             </div>
 
             <nav>
+                <a href="#" class="nav-link" data-content-file="home.html">home &ensp;</a>
                 <a href="#" class="nav-link" data-content-file="about.html">about &ensp;</a>
-                <a href="#" class="nav-link" data-content-file="audio.html">music &ensp;</a>
-                <a href="#" class="nav-link" data-content-file="gallery.html">memories &ensp;</a>
+                <a href="#" class="nav-link" data-content-file="audio.html">works &ensp;</a>
             </nav>
         </div>
     </div>
@@ -294,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const rightColumn = document.querySelector('.right-column-wrapper');
     const navLinks = document.querySelectorAll('.left-content nav a.nav-link');
-    const defaultFile = 'about.html'; 
+    const defaultFile = 'home.html'; // <<< UPDATED DEFAULT FILE
 
     // --- UTILITY FUNCTIONS ---
 
@@ -312,9 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const htmlContent = await response.text();
 
             rightColumn.innerHTML = htmlContent;
-            window.scrollTo(0, 0); // Scroll page to top, or use rightColumn.scrollTop = 0; if you want the right column only to scroll.
+            window.scrollTo(0, 0); 
 
-            // After loading, re-attach event listeners for the gallery
             attachGalleryTriggers(); 
 
         } catch (error) {
@@ -340,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INITIAL LOAD ---
-    // Simulates a click on the default link to load content on page load
     const initialLink = document.querySelector(`a[data-content-file="${defaultFile}"]`);
     if (initialLink) {
         initialLink.click();
@@ -356,7 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let keyboardListenerAdded = false; 
 
     function clearMedia(popup) {
-        // Remove existing media (img/video) elements inside popup
         popup.querySelectorAll('img, video').forEach(el => {
             if (el.tagName && el.tagName.toLowerCase() === 'video') {
                 try { el.pause(); } catch (err) {}
@@ -383,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             video.loop = true;
             video.playsInline = true;
             video.style.maxWidth = '100%';
-            video.style.maxHeight = '100%';
+            video.maxHeight = '100%';
             video.setAttribute('aria-label', 'Gallery video');
             popup.insertBefore(video, insertionPoint);
 
@@ -396,20 +413,18 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = src;
             img.alt = 'Gallery image';
             img.style.maxWidth = '100%';
-            img.style.maxHeight = '100%';
+            img.maxHeight = '100%';
             popup.insertBefore(img, insertionPoint);
         }
     }
     
-    // Attaches all gallery-related events after new content is loaded
     function attachGalleryTriggers() {
         const popup = document.getElementById('columnPopup');
-        if (!popup) return; // Exit if the content doesn't have the popup structure
+        if (!popup) return;
 
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         
-        // Define trigger handler
         const galleryTriggerHandler = function(e) {
              e.preventDefault();
              currentGallery = e.currentTarget.dataset.images.split(',').map(x => x.trim()).filter(x => x.length);
@@ -418,13 +433,11 @@ document.addEventListener('DOMContentLoaded', () => {
              popup.style.display = 'flex';
         };
 
-        // Attach event listener to current gallery triggers
         document.querySelectorAll('.gallery-trigger').forEach(item => {
             item.removeEventListener('click', galleryTriggerHandler);
             item.addEventListener('click', galleryTriggerHandler);
         });
         
-        // ATTACH NAV BUTTON EVENTS
         nextBtn.onclick = (e) => {
             e.stopPropagation();
             if (!currentGallery.length) return;
@@ -439,7 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showMedia(popup, prevBtn, nextBtn, currentIndex);
         };
 
-        // ATTACH CLOSE EVENT (Only on background click)
         popup.onclick = (e) => {
             if (e.target === popup) {
                 popup.style.display = 'none';
@@ -449,14 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // ATTACH KEYBOARD EVENTS (Add only once to the document)
         if (!keyboardListenerAdded) {
             document.addEventListener('keydown', keyboardHandler);
             keyboardListenerAdded = true;
         }
     }
     
-    // KeyDown Handler Definition
     function keyboardHandler(e) {
         const popup = document.getElementById('columnPopup');
         if (popup && popup.style.display === 'flex') {
@@ -473,7 +483,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- Disable right-click on the entire page --- 
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         alert("Right-click is disabled on this page.");
