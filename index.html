@@ -89,12 +89,11 @@ h1, h2 {
     font-weight: bold;
 }
 
-/* RIGHT COLUMN (Content area where new files are loaded) */
+/* RIGHT COLUMN WRAPPER */
 .right-column-wrapper {
     flex-basis: 66.66%;
     flex-grow: 1;
     margin-top: 0.5vh;
-    padding-top: 16vh;
     padding-left: 20px;
     box-sizing: border-box;
     position: relative;
@@ -104,13 +103,22 @@ h1, h2 {
     margin: 0 0 8px 0;
 }
 
+/* -------------------------------------- */
+/* CONTENT STYLES */
+/* -------------------------------------- */
+
+/* Fix for consistent top alignment (Applies to the default image and the first element of loaded fragments) */
+.right-column-wrapper > *:first-child {
+    padding-top: 16vh; 
+}
+
 /* Base styles for content loaded into the right column */
 .content-section p, 
 .right-column-wrapper p {
     color: #ddd;
     line-height: 1.5;
     margin-bottom: 16px;
-    /* KEY CHANGE: Preserve spacing and line breaks */
+    /* KEY FOR SPACING */
     white-space: pre-wrap; 
 }
 
@@ -118,7 +126,20 @@ h1, h2 {
     padding: 32px 0;
 }
 
-/* TIMELINE (Must be here since content is dynamic) */
+/* DEFAULT SPLASH IMAGE STYLES */
+.home-image-container {
+    width: 100%;
+    line-height: 0; /* Prevents extra space below the image */
+}
+
+.home-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* TIMELINE STYLES */
 .timeline {
     position: relative;
     padding: 20px 0 2px 30px;
@@ -145,7 +166,7 @@ h1, h2 {
 }
 
 .timeline-item-link:hover {
-    color: #22cc33;
+    color: #b3ff00;
     cursor: pointer;
 }
 
@@ -165,7 +186,7 @@ h1, h2 {
     color: #ccc;
 }
 
-/* POPUP GALLERY (Must be here since content is dynamic) */
+/* POPUP GALLERY STYLES */
 #columnPopup {
     position: fixed; 
     top: 0;
@@ -248,6 +269,10 @@ h1, h2 {
         padding-left: 0;
         padding-top: 0;
     }
+    /* Mobile fix: remove top padding on loaded content */
+    .right-column-wrapper > *:first-child {
+        padding-top: 0 !important; 
+    }
 }
 
 @media (max-width: 600px) {
@@ -278,13 +303,26 @@ h1, h2 {
 
             <nav>
                 <a href="about" class="nav-link" data-content-file="about.html">about &ensp;</a>
-                <a href="music" class="nav-link" data-content-file="catalog.html">works &ensp;</a>
+                <a href="music" class="nav-link" data-content-file="catalog.html">catalog &ensp;</a>
             </nav>
         </div>
     </div>
 
     <div class="right-column-wrapper">
-        <p>Loading content...</p>
+        
+        <div id="splash-content" class="content-section">
+            <div class="home-image-container">
+                <img src="images/your-full-image.jpg" alt="Portfolio Splash Image">
+            </div>
+        </div>
+
+        <div id="static-footer">
+            <div style="height: 80px;"></div>
+            <p>&ensp; &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Design by artsandtoys.</p>
+            <br><br>
+            <p>&ensp; &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; <a href="#"><b><i>Fin.</i></b></a></p>
+        </div>
+        
     </div>
 </div>
     
@@ -293,16 +331,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const rightColumn = document.querySelector('.right-column-wrapper');
     const navLinks = document.querySelectorAll('.left-content nav a.nav-link');
-    const defaultFile = 'about.html'; 
-
+    // Get the static content and footer elements
+    const defaultSplash = document.getElementById('splash-content'); 
+    const staticFooter = document.getElementById('static-footer');
+    
     // --- UTILITY FUNCTIONS ---
 
     function removeActiveClasses() {
         navLinks.forEach(link => link.classList.remove('active'));
     }
 
+    // Function to hide the static content when a link is clicked
+    function hideDefaultContent() {
+        if (defaultSplash) defaultSplash.style.display = 'none';
+        if (staticFooter) staticFooter.style.display = 'none'; 
+        // Clear any content that might have been loaded dynamically previously
+        // We use innerHTML = '' on the rightColumn before insertion, but this ensures safety
+        rightColumn.innerHTML = ''; 
+    }
+
     // Function to load content dynamically via fetch
     async function loadContent(fileName) {
+        // 1. Hide the static splash content before loading new content
+        hideDefaultContent(); 
+        
         try {
             const response = await fetch(fileName);
             if (!response.ok) {
@@ -310,10 +362,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const htmlContent = await response.text();
 
+            // 2. Insert new HTML
             rightColumn.innerHTML = htmlContent;
-            window.scrollTo(0, 0); // Scroll page to top, or use rightColumn.scrollTop = 0; if you want the right column only to scroll.
+            window.scrollTo(0, 0); 
 
-            // After loading, re-attach event listeners for the gallery
+            // 3. Re-attach event listeners (especially for the gallery)
             attachGalleryTriggers(); 
 
         } catch (error) {
@@ -339,15 +392,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INITIAL LOAD ---
-    // Simulates a click on the default link to load content on page load
-    const initialLink = document.querySelector(`a[data-content-file="${defaultFile}"]`);
-    if (initialLink) {
-        initialLink.click();
-    }
+    // CODE REMOVED: No initial file loading. The static HTML is the default.
 
 
     // ----------------------------------------------------
-    // --- GALLERY POPUP LOGIC ---
+    // --- GALLERY POPUP LOGIC (Requires works.html to be loaded) ---
     // ----------------------------------------------------
     
     let currentGallery = [];
@@ -355,7 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let keyboardListenerAdded = false; 
 
     function clearMedia(popup) {
-        // Remove existing media (img/video) elements inside popup
         popup.querySelectorAll('img, video').forEach(el => {
             if (el.tagName && el.tagName.toLowerCase() === 'video') {
                 try { el.pause(); } catch (err) {}
@@ -382,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
             video.loop = true;
             video.playsInline = true;
             video.style.maxWidth = '100%';
-            video.style.maxHeight = '100%';
+            video.maxHeight = '100%';
             video.setAttribute('aria-label', 'Gallery video');
             popup.insertBefore(video, insertionPoint);
 
@@ -395,30 +443,33 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = src;
             img.alt = 'Gallery image';
             img.style.maxWidth = '100%';
-            img.style.maxHeight = '100%';
+            img.maxHeight = '100%';
             popup.insertBefore(img, insertionPoint);
         }
     }
     
     // Attaches all gallery-related events after new content is loaded
     function attachGalleryTriggers() {
-        const popup = document.getElementById('columnPopup');
-        if (!popup) return; // Exit if the content doesn't have the popup structure
+        // The popup element is loaded inside works.html, so we query the main column wrapper
+        // The popup itself must be an ID, so we look for it in the newly loaded content
+        const popup = rightColumn.querySelector('#columnPopup');
+        if (!popup) return;
 
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = popup.querySelector('#prevBtn');
+        const nextBtn = popup.querySelector('#nextBtn');
         
         // Define trigger handler
         const galleryTriggerHandler = function(e) {
              e.preventDefault();
+             // The gallery must be attached to the main body's event listener for key presses to work
              currentGallery = e.currentTarget.dataset.images.split(',').map(x => x.trim()).filter(x => x.length);
              currentIndex = 0;
              showMedia(popup, prevBtn, nextBtn, currentIndex);
              popup.style.display = 'flex';
         };
 
-        // Attach event listener to current gallery triggers
-        document.querySelectorAll('.gallery-trigger').forEach(item => {
+        // Targets gallery triggers in the currently loaded content
+        rightColumn.querySelectorAll('.gallery-trigger').forEach(item => {
             item.removeEventListener('click', galleryTriggerHandler);
             item.addEventListener('click', galleryTriggerHandler);
         });
@@ -457,10 +508,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // KeyDown Handler Definition
     function keyboardHandler(e) {
-        const popup = document.getElementById('columnPopup');
+        // Since the popup element is dynamically loaded, we must query the main document for its existence
+        const popup = document.querySelector('#columnPopup'); 
+        
         if (popup && popup.style.display === 'flex') {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = popup.querySelector('#prevBtn');
+            const nextBtn = popup.querySelector('#nextBtn');
             
             if (e.key === 'Escape') {
                 popup.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (err) {} });
