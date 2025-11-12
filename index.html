@@ -89,11 +89,12 @@ h1, h2 {
     font-weight: bold;
 }
 
-/* RIGHT COLUMN WRAPPER */
+/* RIGHT COLUMN (Content area where new files are loaded) */
 .right-column-wrapper {
     flex-basis: 66.66%;
     flex-grow: 1;
     margin-top: 0.5vh;
+    padding-top: 16vh;
     padding-left: 20px;
     box-sizing: border-box;
     position: relative;
@@ -103,22 +104,13 @@ h1, h2 {
     margin: 0 0 8px 0;
 }
 
-/* -------------------------------------- */
-/* CONTENT STYLES */
-/* -------------------------------------- */
-
-/* Fix for consistent top alignment (Applies to the default image and the first element of loaded fragments) */
-.right-column-wrapper > *:first-child {
-    padding-top: 16vh; 
-}
-
 /* Base styles for content loaded into the right column */
 .content-section p, 
 .right-column-wrapper p {
     color: #ddd;
     line-height: 1.5;
     margin-bottom: 16px;
-    /* KEY FOR SPACING */
+    /* KEY CHANGE: Preserve spacing and line breaks */
     white-space: pre-wrap; 
 }
 
@@ -126,20 +118,7 @@ h1, h2 {
     padding: 32px 0;
 }
 
-/* DEFAULT SPLASH IMAGE STYLES */
-.home-image-container {
-    width: 100%;
-    line-height: 0; 
-}
-
-.home-image-container img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-/* TIMELINE STYLES */
+/* TIMELINE (Must be here since content is dynamic) */
 .timeline {
     position: relative;
     padding: 20px 0 2px 30px;
@@ -186,7 +165,7 @@ h1, h2 {
     color: #ccc;
 }
 
-/* POPUP GALLERY STYLES */
+/* POPUP GALLERY (Must be here since content is dynamic) */
 #columnPopup {
     position: fixed; 
     top: 0;
@@ -269,10 +248,6 @@ h1, h2 {
         padding-left: 0;
         padding-top: 0;
     }
-    /* Mobile fix: remove top padding on loaded content */
-    .right-column-wrapper > *:first-child {
-        padding-top: 0 !important; 
-    }
 }
 
 @media (max-width: 600px) {
@@ -302,27 +277,14 @@ h1, h2 {
             </div>
 
             <nav>
-                <a href="#" class="nav-link" data-content-file="about.html">about &ensp;</a>
-                <a href="#" class="nav-link" data-content-file="works.html">works &ensp;</a>
+                <a href="about" class="nav-link" data-content-file="about.html">about &ensp;</a>
+                <a href="music" class="nav-link" data-content-file="catalog.html">works &ensp;</a>
             </nav>
         </div>
     </div>
 
     <div class="right-column-wrapper">
-        
-        <div id="splash-content" class="content-section">
-            <div class="home-image-container">
-                <img src="images/your-full-image.jpg" alt="Portfolio Splash Image">
-            </div>
-        </div>
-
-        <div id="static-footer">
-            <div style="height: 80px;"></div>
-            <p>&ensp; &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Design by artsandtoys.</p>
-            <br><br>
-            <p>&ensp; &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; <a href="#"><b><i>Fin.</i></b></a></p>
-        </div>
-        
+        <p>Loading content...</p>
     </div>
 </div>
     
@@ -331,12 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const rightColumn = document.querySelector('.right-column-wrapper');
     const navLinks = document.querySelectorAll('.left-content nav a.nav-link');
-    const defaultSplash = document.getElementById('splash-content'); 
-    const staticFooter = document.getElementById('static-footer');
-    
-    // Default load is now handled by the static HTML structure, 
-    // but we need to ensure the correct link is active if the user navigates back
-    const defaultLink = navLinks[0]; // Assumes 'about' is the first link, but none are active initially
+    const defaultFile = 'about.html'; 
 
     // --- UTILITY FUNCTIONS ---
 
@@ -344,19 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.forEach(link => link.classList.remove('active'));
     }
 
-    // Function to hide the static content when a link is clicked
-    function hideDefaultContent() {
-        if (defaultSplash) defaultSplash.style.display = 'none';
-        if (staticFooter) staticFooter.style.display = 'none'; 
-        // Clear any previous dynamic content
-        rightColumn.querySelectorAll('section').forEach(s => s.remove());
-    }
-
     // Function to load content dynamically via fetch
     async function loadContent(fileName) {
-        // 1. Hide the static splash before replacing content
-        hideDefaultContent(); 
-        
         try {
             const response = await fetch(fileName);
             if (!response.ok) {
@@ -364,11 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const htmlContent = await response.text();
 
-            // 2. Clear wrapper and insert new HTML
             rightColumn.innerHTML = htmlContent;
-            window.scrollTo(0, 0); 
+            window.scrollTo(0, 0); // Scroll page to top, or use rightColumn.scrollTop = 0; if you want the right column only to scroll.
 
-            // 3. Re-attach event listeners (especially for the gallery)
+            // After loading, re-attach event listeners for the gallery
             attachGalleryTriggers(); 
 
         } catch (error) {
@@ -394,13 +339,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INITIAL LOAD ---
-    // NO INITIAL LOAD - The static content is the default view.
-    // If you want the 'about' link to be highlighted immediately, uncomment this:
-    // defaultLink.classList.add('active');
+    // Simulates a click on the default link to load content on page load
+    const initialLink = document.querySelector(`a[data-content-file="${defaultFile}"]`);
+    if (initialLink) {
+        initialLink.click();
+    }
 
 
     // ----------------------------------------------------
-    // --- GALLERY POPUP LOGIC (Requires works.html to be loaded) ---
+    // --- GALLERY POPUP LOGIC ---
     // ----------------------------------------------------
     
     let currentGallery = [];
@@ -408,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let keyboardListenerAdded = false; 
 
     function clearMedia(popup) {
+        // Remove existing media (img/video) elements inside popup
         popup.querySelectorAll('img, video').forEach(el => {
             if (el.tagName && el.tagName.toLowerCase() === 'video') {
                 try { el.pause(); } catch (err) {}
@@ -434,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
             video.loop = true;
             video.playsInline = true;
             video.style.maxWidth = '100%';
-            video.maxHeight = '100%';
+            video.style.maxHeight = '100%';
             video.setAttribute('aria-label', 'Gallery video');
             popup.insertBefore(video, insertionPoint);
 
@@ -447,19 +395,20 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = src;
             img.alt = 'Gallery image';
             img.style.maxWidth = '100%';
-            img.maxHeight = '100%';
+            img.style.maxHeight = '100%';
             popup.insertBefore(img, insertionPoint);
         }
     }
     
+    // Attaches all gallery-related events after new content is loaded
     function attachGalleryTriggers() {
-        // The popup element is loaded inside works.html, so we query the main column wrapper
-        const popup = rightColumn.querySelector('#columnPopup');
-        if (!popup) return;
+        const popup = document.getElementById('columnPopup');
+        if (!popup) return; // Exit if the content doesn't have the popup structure
 
-        const prevBtn = popup.querySelector('#prevBtn');
-        const nextBtn = popup.querySelector('#nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
         
+        // Define trigger handler
         const galleryTriggerHandler = function(e) {
              e.preventDefault();
              currentGallery = e.currentTarget.dataset.images.split(',').map(x => x.trim()).filter(x => x.length);
@@ -468,12 +417,13 @@ document.addEventListener('DOMContentLoaded', () => {
              popup.style.display = 'flex';
         };
 
-        // Targets gallery triggers in the currently loaded content
-        rightColumn.querySelectorAll('.gallery-trigger').forEach(item => {
+        // Attach event listener to current gallery triggers
+        document.querySelectorAll('.gallery-trigger').forEach(item => {
             item.removeEventListener('click', galleryTriggerHandler);
             item.addEventListener('click', galleryTriggerHandler);
         });
         
+        // ATTACH NAV BUTTON EVENTS
         nextBtn.onclick = (e) => {
             e.stopPropagation();
             if (!currentGallery.length) return;
@@ -488,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showMedia(popup, prevBtn, nextBtn, currentIndex);
         };
 
+        // ATTACH CLOSE EVENT (Only on background click)
         popup.onclick = (e) => {
             if (e.target === popup) {
                 popup.style.display = 'none';
@@ -497,17 +448,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // ATTACH KEYBOARD EVENTS (Add only once to the document)
         if (!keyboardListenerAdded) {
             document.addEventListener('keydown', keyboardHandler);
             keyboardListenerAdded = true;
         }
     }
     
+    // KeyDown Handler Definition
     function keyboardHandler(e) {
         const popup = document.getElementById('columnPopup');
         if (popup && popup.style.display === 'flex') {
-            const prevBtn = popup.querySelector('#prevBtn');
-            const nextBtn = popup.querySelector('#nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
             
             if (e.key === 'Escape') {
                 popup.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (err) {} });
@@ -519,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // --- Disable right-click on the entire page --- 
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         alert("Right-click is disabled on this page.");
