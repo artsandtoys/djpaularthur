@@ -214,6 +214,119 @@ h1, h2 {
     color: #b3ff00;
 }
 
+/* GALLERY PAGE */
+/* --- BEGIN: Image Gallery and Modal Styles (Safe Integration) --- */
+
+/* Base Styles (Keep these if you want the page background) */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+    /* Background Image/Styling as requested previously */
+    background: url('work-image.jpg') no-repeat fixed center; 
+    background-size: cover;
+    background-color: #f0f0f0; 
+}
+
+/* Updated Class: .page-header */
+.page-header {
+    text-align: center;
+    padding: 32px;
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+/* Updated Class: .gallery-row */
+.gallery-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+/* Updated Class: .gallery-column */
+.gallery-column {
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+}
+
+/* Target images *inside* the new column class */
+.gallery-column img {
+    margin-top: 8px;
+    vertical-align: middle;
+    width: 100%;
+    cursor: pointer; 
+    
+    /* Black and White Effect */
+    filter: grayscale(100%);
+    /* Smooth transition for hover effect */
+    transition: filter 0.3s ease-in-out; 
+}
+
+/* Color on Hover Effect */
+.gallery-column img:hover {
+    filter: grayscale(0%); /* Restore original color */
+}
+
+/* Responsive Grid Layout */
+@media screen and (max-width: 800px) {
+    .gallery-column {
+        flex: 50%;
+        max-width: 50%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .gallery-column {
+        flex: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Modal/Lightbox Styles (These usually don't conflict) */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; /* Use a high z-index to ensure it sits on top */
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.9); 
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+/* Close Button (X) */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* --- END: Image Gallery and Modal Styles --- */
+
 /* MOBILE RESPONSIVE */
 @media (max-width: 800px) {
     .main-container {
