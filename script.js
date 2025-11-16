@@ -195,3 +195,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// =======================================================
+// SIMPLE MODAL/LIGHTBOX LOGIC (Called by onclick="openModal(this)")
+// This function must be globally accessible (defined outside the DOMContentLoaded listener)
+// =======================================================
+
+function openModal(element) {
+    // CRITICAL: Get the modal and image elements when an image is clicked.
+    const modal = document.getElementById("myModal");
+    const modalImg = document.getElementById("img01");
+
+    if (modal && modalImg) {
+        modal.style.display = "block";
+        modalImg.src = element.src;
+    } else {
+        console.error("Modal elements #myModal or #img01 not found.");
+    }
+}
+
+// =======================================================
+// MODAL CLOSE LISTENERS (Integrate within your existing DOMContentLoaded listener)
+// =======================================================
+
+/* IMPORTANT: You must integrate the following block of code 
+    *inside* your existing document.addEventListener('DOMContentLoaded', () => { ... });
+*/
+
+    // Get the <span> element (the 'X' button) that closes the modal
+    const closeSpan = document.getElementsByClassName("close")[0];
+    const modal = document.getElementById("myModal");
+
+    if (closeSpan && modal) {
+        // When the user clicks on <span> (x), close the modal
+        closeSpan.onclick = function() { 
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
