@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const rightColumn = document.querySelector('.right-column-wrapper');
     const navLinks = document.querySelectorAll('.left-content nav a.nav-link');
-    // Get the static content and footer elements
+    // Get the static content and footer elements 
     const defaultSplash = document.getElementById('splash-content'); 
     const staticFooter = document.getElementById('static-footer');
     
