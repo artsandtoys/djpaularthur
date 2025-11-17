@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0); 
 
             // 3. Re-attach event listeners (especially for the gallery)
-            attachGalleryTriggers(); 
+            //attachGalleryTriggers(); 
 
         } catch (error) {
             console.error('Content loading error:', error);
