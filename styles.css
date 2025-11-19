@@ -89,9 +89,14 @@ h1, h2 {
 }
 
 .right-column-wrapper h2 {
-    margin: 0 0 8px 0; /* */
+    margin: 0 0 8px 0;
 }
-    
+
+/* spacing T, L, B, R */
+.content-section {
+    padding: 2px 0; /* */
+}
+
 /* Base styles for content loaded into the right column */
 .content-section p, 
 .right-column-wrapper p {
@@ -100,10 +105,6 @@ h1, h2 {
     margin-bottom: 16px;
     /* KEY FOR SPACING */
     white-space: pre-wrap; 
-}
-
-.content-section {
-    padding: 32px 0;
 }
 
 /* DEFAULT SPLASH IMAGE STYLES */
@@ -120,7 +121,7 @@ h1, h2 {
     object-fit: cover;
 }
 
-/* TIMELINE STYLES T 12, L, B 2, R */
+/* spacing T, L, B, R */
 .timeline {
     position: relative;
     padding: 2px 0 0px 30px;
