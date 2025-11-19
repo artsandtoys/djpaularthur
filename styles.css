@@ -94,7 +94,7 @@ h1, h2 {
 
 /* spacing T, L, B, R */
 .content-section {
-    padding: 2px 0; /* */
+    padding: 33px 0; /* */
 }
 
 /* Base styles for content loaded into the right column */
@@ -249,17 +249,18 @@ h1, h2 {
         padding-left: 0;
         padding-top: 0;
     }
+    
     /* Mobile fix: remove top padding on loaded content */
-    .right-column-wrapper > *:first-child {
+    /*.right-column-wrapper > *:first-child {
         padding-top: 0 !important; 
     }
-}
+    }*/
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) { */
     .gallery-btn {
         font-size: 2em;
         padding: 10px;
-    }
+    /* } */
     #prevBtn { left: 5px; }
     #nextBtn { right: 5px; }
 }
