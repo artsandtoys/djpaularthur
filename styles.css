@@ -231,8 +231,8 @@ h1, h2 {
     .main-container {
         width: 90%;
         flex-direction: column;
-        padding-left: 4px; 
-        padding-bottom: 12px; 
+        padding-left: 4px;
+        padding-bottom: 8px;
     }
 
     /* 2. Reset Left Column (Header area) */
@@ -249,38 +249,28 @@ h1, h2 {
 
     .left-content {
         width: 100%;
-        margin-top: 40px; 
+        margin-top: 40px;
     }
 
-    /* --- NEW: HORIZONTAL NAV STYLES --- */
+    /* --- HORIZONTAL NAV (Clean Version) --- */
     
-    /* Turn the nav container into a horizontal flexbox */
+    /* Flexbox to align items horizontally */
     .left-content nav {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap; /* Wraps links to next line if they run out of space */
-        gap: 10px; /* Spacing between links */
-        margin-top: 20px;
+        flex-direction: row; /* Layout side-by-side */
+        flex-wrap: wrap; /* Allow wrapping if screen is too narrow */
+        gap: 20px; /* The space between the links */
+        margin-top: 10px;
     }
 
-    /* Style the links to look like tabs/buttons */
+    /* Remove vertical margins from base styles */
     .left-content nav a {
         display: inline-block;
-        margin: 0; /* Removes the old vertical margin */
-        padding: 8px 12px;
-        background-color: #1a1a1a; /* Dark grey background for contrast */
-        border-radius: 4px;
-        border: 1px solid #333;
-        font-size: 14px;
+        margin: 0; 
+        padding: 5px 0;
+        /* No extra styling added here, just positioning */
     }
-
-    /* Ensure active state looks good in this new format */
-    .left-content nav a.active {
-        background-color: #b3ff00;
-        color: #000; /* Invert text color for better readability */
-        border-color: #b3ff00;
-    }
-    /* ---------------------------------- */
+    /* -------------------------------------- */
 
     /* 3. Reset Right Column (Content) */
     .right-column-wrapper {
@@ -298,7 +288,7 @@ h1, h2 {
     .timeline {
         padding-left: 20px;
     }
-    
+
     /* Gallery Mobile Controls */
     #prevBtn { left: 10px; }
     #nextBtn { right: 10px; }
