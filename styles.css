@@ -221,3 +221,72 @@ h1, h2 {
     color: #b3ff00;
 }
 
+/* =========================================
+   MOBILE / TABLET MEDIA QUERY
+   Target: Screens smaller than 768px
+   ========================================= */
+@media screen and (max-width: 768px) {
+
+    /* 1. Stack the Main Container */
+    .main-container {
+        width: 90%; /* Wider container for small screens */
+        flex-direction: column; /* Stacks left and right columns vertically */
+        padding-bottom: 30px;
+    }
+
+    /* 2. Reset Left Column (Header/Nav) */
+    .left-column {
+        flex-basis: auto;
+        width: 100%;
+        height: auto; /* Removes the viewport height restriction */
+        position: relative; /* Removes sticky behavior to save screen space */
+        padding-right: 0;
+        margin-bottom: 40px; /* Adds space between nav and content */
+        border-bottom: 1px solid #333; /* Optional: visual separator */
+        padding-bottom: 20px;
+    }
+
+    .left-content {
+        width: 100%;
+        margin-top: 40px; /* Reduces the large 14vh top margin */
+    }
+
+    /* Adjust Nav Links for easier tapping */
+    .left-content nav a {
+        padding: 10px 0; /* Larger touch target */
+        font-size: 18px;
+    }
+
+    /* 3. Reset Right Column (Content) */
+    .right-column-wrapper {
+        flex-basis: auto;
+        width: 100%;
+        margin-top: 0; /* Removes the desktop offset */
+        padding-left: 0; /* Removes side padding since it's stacked */
+    }
+
+    /* 4. Adjust Images */
+    .home-image-container img {
+        margin-top: 0;
+    }
+
+    /* 5. Timeline Adjustments */
+    .timeline {
+        padding-left: 20px; /* Slightly tighter spacing */
+    }
+    
+    .timeline-item-link {
+        margin-bottom: 25px;
+    }
+
+    /* 6. Gallery Popup Controls */
+    /* Move buttons to edges so they don't cover the image */
+    #prevBtn { left: 10px; }
+    #nextBtn { right: 10px; }
+    
+    .gallery-btn {
+        padding: 10px; /* Smaller hit area to avoid blocking view */
+        background: rgba(0,0,0,0.5); /* Semi-transparent background for visibility */
+        border-radius: 5px;
+    }
+}
