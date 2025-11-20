@@ -231,7 +231,6 @@ h1, h2 {
     .main-container {
         width: 90%;
         flex-direction: column; /* Stacks Left Column on top of Right Column */
-        padding-left: 4px;
         padding-bottom: 12px;
     }
 
@@ -243,7 +242,6 @@ h1, h2 {
         position: relative; /* Removes sticky behavior */
         padding-right: 0;
         margin-bottom: 10px; /* Small space before content starts */
-        /* Border removed as requested */
     }
 
     .left-content {
@@ -256,8 +254,8 @@ h1, h2 {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 20px; /* Space between links */
-        margin-top: 10px;
+        gap: 12px; /* Space between links */
+        margin-top: 12px;
     }
 
     .left-content nav a {
