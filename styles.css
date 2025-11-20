@@ -229,64 +229,82 @@ h1, h2 {
 
     /* 1. Stack the Main Container */
     .main-container {
-        width: 90%; /* Wider container for small screens */
-        flex-direction: column; /* Stacks left and right columns vertically */
-        padding-bottom: 30px;
+        width: 90%;
+        flex-direction: column;
+        padding-left: 4px; 
+        padding-bottom: 12px; 
     }
 
-    /* 2. Reset Left Column (Header/Nav) */
+    /* 2. Reset Left Column (Header area) */
     .left-column {
         flex-basis: auto;
         width: 100%;
-        height: auto; /* Removes the viewport height restriction */
-        position: relative; /* Removes sticky behavior to save screen space */
+        height: auto;
+        position: relative;
         padding-right: 0;
-        margin-bottom: 40px; /* Adds space between nav and content */
-        border-bottom: 1px solid #333; /* Optional: visual separator */
+        margin-bottom: 30px;
+        border-bottom: 1px solid #333; 
         padding-bottom: 20px;
     }
 
     .left-content {
         width: 100%;
-        margin-top: 40px; /* Reduces the large 14vh top margin */
+        margin-top: 40px; 
     }
 
-    /* Adjust Nav Links for easier tapping */
-    .left-content nav a {
-        padding: 10px 0; /* Larger touch target */
-        font-size: 18px;
+    /* --- NEW: HORIZONTAL NAV STYLES --- */
+    
+    /* Turn the nav container into a horizontal flexbox */
+    .left-content nav {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap; /* Wraps links to next line if they run out of space */
+        gap: 10px; /* Spacing between links */
+        margin-top: 20px;
     }
+
+    /* Style the links to look like tabs/buttons */
+    .left-content nav a {
+        display: inline-block;
+        margin: 0; /* Removes the old vertical margin */
+        padding: 8px 12px;
+        background-color: #1a1a1a; /* Dark grey background for contrast */
+        border-radius: 4px;
+        border: 1px solid #333;
+        font-size: 14px;
+    }
+
+    /* Ensure active state looks good in this new format */
+    .left-content nav a.active {
+        background-color: #b3ff00;
+        color: #000; /* Invert text color for better readability */
+        border-color: #b3ff00;
+    }
+    /* ---------------------------------- */
 
     /* 3. Reset Right Column (Content) */
     .right-column-wrapper {
         flex-basis: auto;
         width: 100%;
-        margin-top: 0; /* Removes the desktop offset */
-        padding-left: 0; /* Removes side padding since it's stacked */
+        margin-top: 0;
+        padding-left: 0;
     }
 
-    /* 4. Adjust Images */
+    /* 4. General Fixes */
     .home-image-container img {
         margin-top: 0;
     }
 
-    /* 5. Timeline Adjustments */
     .timeline {
-        padding-left: 20px; /* Slightly tighter spacing */
+        padding-left: 20px;
     }
     
-    .timeline-item-link {
-        margin-bottom: 25px;
-    }
-
-    /* 6. Gallery Popup Controls */
-    /* Move buttons to edges so they don't cover the image */
+    /* Gallery Mobile Controls */
     #prevBtn { left: 10px; }
     #nextBtn { right: 10px; }
-    
     .gallery-btn {
-        padding: 10px; /* Smaller hit area to avoid blocking view */
-        background: rgba(0,0,0,0.5); /* Semi-transparent background for visibility */
+        padding: 10px;
+        background: rgba(0,0,0,0.5);
         border-radius: 5px;
     }
 }
