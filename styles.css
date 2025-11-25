@@ -239,7 +239,7 @@ h1, h2 {
 /* No changes are typically needed for the individual images: */
 .grid-container img {
     /* Calculation: Ensure the image width accounts for the spacing (8 gaps of 5px) */
-    width: calc((100% - 25px) / 9); 
+    width: calc((100% - 200px) / 9); 
     height: auto;
     cursor: pointer;
     display: block;
