@@ -229,17 +229,17 @@ h1, h2 {
     flex-wrap: wrap; 
     
     /* Spacing: Creates a gutter between all grid items */
-    gap: 25px; /* Adjust this value (e.g., 5px or 1rem) for your desired spacing */
+    gap: 5px; /* Adjust this value (e.g., 5px or 1rem) for your desired spacing */
 
     /* Sizing: Define the overall size of the container */
     width: 90vw;
-    max-width: 100%; /* 800px Or whatever maximum size you prefer */
+    max-width: 800px; /* 800px Or whatever maximum size you prefer */
 }
 
 /* No changes are typically needed for the individual images: */
 .grid-container img {
     /* Calculation: Ensure the image width accounts for the spacing (8 gaps of 5px) */
-    width: calc((100% - 200px) / 9); 
+    width: calc((100% - 40px) / 9); 
     height: auto;
     cursor: pointer;
     display: block;
