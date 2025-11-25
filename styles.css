@@ -268,7 +268,7 @@ h1, h2 {
 
 .lightbox-content {
     display: block;
-    max-width: 90%; 
+    max-width: 75%; 
     /* Ensures the image respects the height of the viewport */
     max-height: 90vh; 
     object-fit: contain; /* Prevents the image from being cropped */
