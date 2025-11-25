@@ -193,41 +193,41 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         alert("Right-click is disabled on this page.");
     });
-});
 
-// --- NEW 9x9 GRID LIGHTBOX FUNCTIONS ---
+    // --- NEW 9x9 GRID LIGHTBOX FUNCTIONS (Place at the end of your JS file) ---
 
 function openLightbox(element) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightbox-image');
 
-    // Get the full-size image source from the data-full-src attribute
+    // 1. Get the full-size image source from the data-full-src attribute
     const fullSrc = element.getAttribute('data-full-src');
     if (!fullSrc) {
         console.error('Image element missing data-full-src attribute.');
         return;
     }
 
-    // Set the full-size image source
+    // 2. Set the full-size image source and display
     lightboxImage.src = fullSrc;
+    lightbox.style.display = 'flex'; // Use 'flex' to activate CSS centering
 
-    // Display the lightbox and dim the background
-    lightbox.style.display = 'flex'; // Use 'flex' to enable centering via CSS
-    
-    // Optional: Add a class to the body to prevent background scrolling
-    document.body.classList.add('lightbox-active');
+    // 3. Optional: Prevent body scrolling while lightbox is open
+    document.body.style.overflow = 'hidden'; 
 }
 
 function closeLightbox() {
     const lightbox = document.getElementById('lightbox');
     
-    // Hide the lightbox
+    // 1. Hide the lightbox
     lightbox.style.display = 'none';
     
-    // Optional: Remove the class to allow background scrolling again
-    document.body.classList.remove('lightbox-active');
+    // 2. Restore body scrolling
+    document.body.style.overflow = '';
     
-    // Clear the image source to save memory/stop loading if interrupted
+    // 3. Clear the image source (good practice)
     document.getElementById('lightbox-image').src = '';
 }
-// ----------------------------------------
+    // end
+});
+
+
