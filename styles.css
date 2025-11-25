@@ -251,6 +251,7 @@ h1, h2 {
     display: none; /* Changed to 'flex' when opened by JS */
     position: absolute;
     z-index: 100;
+    background-color: rgba(0, 0, 0, 0.9);
     justify-content: center; /* Centers horizontally */
     align-items: center;    /* Centers vertically */
 }
@@ -258,8 +259,9 @@ h1, h2 {
 /* We don't need the 'transform' hack on the image itself if we use the above: */
 .lightbox-content {
     display: block;
-    max-width: 50%;
-    max-height: 50%;
+    /* 50% */
+    max-width: 90%; 
+    max-height: 00%;
 }
 
 @media screen and (max-width: 768px) {
