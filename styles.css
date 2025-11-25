@@ -302,6 +302,7 @@ h1, h2 {
         /* Change to a single column */
         grid-template-columns: 1fr; 
         gap: 5px; 
+        margin: 0;
     }
     
     /* Optional: If you want to center the container when it's narrow */
